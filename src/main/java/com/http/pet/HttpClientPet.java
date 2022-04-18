@@ -1,8 +1,10 @@
-package com.http;
+package com.http.pet;
 
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+import com.model.ApiResponse;
 import com.model.Pet;
-import org.json.JSONObject;
+import com.util.Util;
 
 import java.io.IOException;
 import java.math.BigInteger;
@@ -15,22 +17,22 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
 
-public class HttpClientUtil {
+public class HttpClientPet {
     private static final HttpClient CLIENT = HttpClient.newHttpClient();
     private static final Gson GSON = new Gson();
 
-    public static Pet sendGet(URI uri, Integer petId) throws IOException, InterruptedException {
+    public static Pet sendGet(String uri, Long petId) throws IOException, InterruptedException {
         HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create(uri.toString() + petId))
+                .uri(URI.create(uri + petId))
                 .GET()
                 .build();
         HttpResponse<String> response = CLIENT.send(request, HttpResponse.BodyHandlers.ofString());
         return GSON.fromJson(response.body(), Pet.class);
     }
 
-    public static Pet sendPost(URI uri, Pet pet) throws IOException, InterruptedException {
+    public static Pet sendPost(String uri, Pet pet) throws IOException, InterruptedException {
         HttpRequest request = HttpRequest.newBuilder()
-                .uri(uri)
+                .uri(URI.create(uri))
                 .header("Content-type", "application/json")
                 .POST(HttpRequest.BodyPublishers.ofString(GSON.toJson(pet)))
                 .build();
@@ -38,12 +40,7 @@ public class HttpClientUtil {
         return GSON.fromJson(response.body(), Pet.class);
     }
 
-    public static String sendPostImage(URI uri, Integer id, Path file) throws IOException, InterruptedException {
-        JSONObject body = new JSONObject();
-        body.put("petId", id.toString());
-        body.put("additionalMetadata", "additionalMetadata");
-        body.put("file", file);
-
+    public static ApiResponse sendPostImage(String uri, Long id, Path file) throws IOException, InterruptedException {
         Map<Object, Object> data = new LinkedHashMap<>();
         data.put("petId", id);
         data.put("additionalMetadata", "additionalMetadata");
@@ -52,16 +49,63 @@ public class HttpClientUtil {
         String boundary = new BigInteger(256, new Random()).toString();
 
         HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create(uri.toString() + id + "/uploadImage"))
+                .uri(URI.create(uri + id + "/uploadImage"))
                 .header("Content-type", "multipart/form-data;boundary=" + boundary)
                 .POST(ofMimeMultipartData(data, boundary))
                 .build();
         HttpResponse<String> response = CLIENT.send(request, HttpResponse.BodyHandlers.ofString());
-        return response.body();
+        return GSON.fromJson(response.body(), ApiResponse.class);
     }
 
-    public static HttpRequest.BodyPublisher ofMimeMultipartData(Map<Object, Object> data,
-                                                         String boundary) throws IOException {
+    public static Pet sendPut(String uri, Pet pet) throws IOException, InterruptedException {
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create(uri))
+                .header("Content-type", "application/json")
+                .PUT(HttpRequest.BodyPublishers.ofString(GSON.toJson(pet)))
+                .build();
+        HttpResponse<String> response = CLIENT.send(request, HttpResponse.BodyHandlers.ofString());
+        return GSON.fromJson(response.body(), Pet.class);
+    }
+
+    public static List<Pet> sendGetWithListOfResults(String uri, String[] queries) throws IOException, InterruptedException {
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create(Util.getQueryURI(uri, queries)))
+                .header("Content-type", "application/json")
+                .GET()
+                .build();
+        HttpResponse<String> response = CLIENT.send(request, HttpResponse.BodyHandlers.ofString());
+        return GSON.fromJson(response.body(), new TypeToken<List<Pet>>(){}.getType());
+    }
+
+    public static ApiResponse sendUpdate(String uri, Long id, String name, String status) throws IOException, InterruptedException {
+        Pet petToUpdate = sendGet(uri, id);
+        petToUpdate.setName(name);
+        petToUpdate.setStatus(status);
+
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create(uri + id))
+                .header("Content-type", "application/x-www-form-urlencoded")
+                .POST(HttpRequest.BodyPublishers.ofString(GSON.toJson(petToUpdate)))
+                .build();
+        HttpResponse<String> response = CLIENT.send(request, HttpResponse.BodyHandlers.ofString());
+        return GSON.fromJson(response.body(), ApiResponse.class);
+    }
+
+    public static ApiResponse sendDelete(String uri, Long id) throws IOException, InterruptedException {
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create(uri + id))
+                .header("Content-type", "application/x-www-form-urlencoded")
+                .DELETE()
+                .build();
+        HttpResponse<String> response = CLIENT.send(request, HttpResponse.BodyHandlers.ofString());
+        return GSON.fromJson(response.body(), ApiResponse.class);
+    }
+
+
+
+    // !!!This method is from stackoverflow!!!
+    private static HttpRequest.BodyPublisher ofMimeMultipartData(Map<Object, Object> data,
+                                                                 String boundary) throws IOException {
         // Result request body
         List<byte[]> byteArrays = new ArrayList<>();
 

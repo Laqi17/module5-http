@@ -1,11 +1,11 @@
 package com.model;
 
 public class Order {
-    private Integer id;
-    private Integer petId;
+    private Long id;
+    private Long petId;
     private Integer quantity;
     private String shipDate;
-    private Status status;
+    private String status;
     private boolean complete;
 
     private enum Status {
@@ -27,7 +27,7 @@ public class Order {
     public Order() {
     }
 
-    public Order(Integer id, Integer petId, Integer quantity, String shipDate, Status status, boolean complete) {
+    public Order(Long id, Long petId, Integer quantity, String shipDate, String status, boolean complete) {
         this.id = id;
         this.petId = petId;
         this.quantity = quantity;
@@ -36,19 +36,19 @@ public class Order {
         this.complete = complete;
     }
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
-    public Integer getPetId() {
+    public Long getPetId() {
         return petId;
     }
 
-    public void setPetId(Integer petId) {
+    public void setPetId(Long petId) {
         this.petId = petId;
     }
 
@@ -68,11 +68,11 @@ public class Order {
         this.shipDate = shipDate;
     }
 
-    public Status getStatus() {
+    public String getStatus() {
         return status;
     }
 
-    public void setStatus(Status status) {
+    public void setStatus(String status) {
         this.status = status;
     }
 
@@ -82,5 +82,17 @@ public class Order {
 
     public void setComplete(boolean complete) {
         this.complete = complete;
+    }
+
+    @Override
+    public String toString() {
+        return "Order{" +
+                "id=" + id +
+                ", petId=" + petId +
+                ", quantity=" + quantity +
+                ", shipDate='" + shipDate + '\'' +
+                ", status='" + status + '\'' +
+                ", complete=" + complete +
+                '}';
     }
 }

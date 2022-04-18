@@ -1,6 +1,6 @@
 package com.model;
 
-public class ApiResponse {
+public class ApiResponse{
     private Integer code;
     private String type;
     private String message;
@@ -36,5 +36,14 @@ public class ApiResponse {
 
     public void setMessage(String message) {
         this.message = message;
+    }
+
+    @Override
+    public String toString() {
+        return "ApiResponse{" +
+                "code=" + code +
+                ", type='" + type + '\'' +
+                ", message='" + message + '\'' +
+                '}';
     }
 }
