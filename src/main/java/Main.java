@@ -32,32 +32,6 @@ public class Main {
         Order order = new Order(1L, 1L, 10, Clock.systemUTC().instant().toString(), "placed", true);
         System.out.println(Clock.systemUTC().instant());
 
-//        Pet test = HttpClientPet.sendPost(ADD_PET, summer);
-//        System.out.println("POST new PET: " + test);
-//
-//        final Pet testFind = HttpClientPet.sendGet(GET_PET_BY_ID, 2L);
-//        System.out.println("GET Pet by id: " + testFind);
-//
-//        Path path = Paths.get("src/main/resources/images/123.png");
-//        //Util.printPath(path);
-//        ApiResponse testImage = HttpClientPet.sendPostImage(ADD_PET, 2L, path);
-//        System.out.println(testImage);
-//
-//        Pet testUpdate = HttpClientPet.sendPut(ADD_PET, summerUpd);
-//
-//        System.out.println(testUpdate);
-//
-//        System.out.println(Util.getQueryURI(GET_PET_BY_STATUS, new String[]{"asdas"}));
-//
-//        List<Pet> petsTest = HttpClientPet.sendGetWithListOfResults(GET_PET_BY_STATUS, new String[]{"sold"});
-//        System.out.println(petsTest.size());
-//
-//        ApiResponse testUpdatePet = HttpClientPet.sendUpdate(GET_PET_BY_ID, 2L, "Bula", "test");
-//        System.out.println(testUpdatePet);
-//
-//        ApiResponse testDelete = HttpClientPet.sendDelete(GET_PET_BY_ID, 2L);
-//        System.out.println(testDelete);
-
         Order testOrder = HttpClientStore.sendPost(ADD_ORDER, order);
         System.out.println(testOrder);
 
