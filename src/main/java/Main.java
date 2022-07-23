@@ -8,9 +8,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 public class Main {
-    private static final String ADD_PET = "https://petstore.swagger.io/v2/pet/";
-    private static final String GET_PET_BY_ID = "https://petstore.swagger.io/v2/pet/";
-    private static final String GET_PET_BY_STATUS = "https://petstore.swagger.io/v2/pet/findByStatus";
+
     private static final String ADD_ORDER = "https://petstore.swagger.io/v2/store/order/";
 
     public static void main(String[] args) throws IOException, InterruptedException, CustomException {
